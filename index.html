@@ -33,7 +33,7 @@
       </a>
 
       <nav class="nav-tabs" aria-label="Main Portal Views">
-        <button class="nav-tab active" data-tab="explorer">🏛️ Inscription Explorer &amp; PDFs</button>
+        <button class="nav-tab active" data-tab="explorer">🏛️ Inscription Explorer</button>
         <button class="nav-tab" data-tab="map">🗺️ Geographic Map</button>
         <button class="nav-tab" data-tab="analytics">📊 Visual Analytics</button>
         <button class="nav-tab" data-tab="compare">⚖️ Side-by-Side Comparator</button>
@@ -41,8 +41,8 @@
       </nav>
 
       <div class="nav-actions">
-        <a class="btn btn-emerald btn-sm" href="pdfs/Siddham_Archive_Complete_Catalogue.pdf" download>
-          📚 Master Catalogue PDF
+        <a class="btn btn-emerald btn-sm" href="pdfs/Siddham_Archive_Complete_Catalogue.pdf" target="_blank">
+          📚 Master Catalogue Viewer
         </a>
         <button class="btn btn-secondary btn-sm" id="themeToggleBtn" title="Switch Dark / Light Theme">
           ☀️ Sandstone Light
@@ -66,9 +66,6 @@
           transliteration and a publication-ready downloadable PDF.
         </p>
         <div class="hero-cta-row">
-          <a class="btn btn-primary" href="pdfs/Siddham_Archive_Complete_Catalogue.pdf" download>
-            📥 Download Complete Master Catalogue (PDF)
-          </a>
           <button class="btn btn-emerald" id="randomSpotlightBtn">
             🎲 Random Inscription Spotlight
           </button>
@@ -105,7 +102,7 @@
   <!-- Main Workspace Container -->
   <main class="main-container">
     <!-- ==================================================================
-         TAB 1: INSCRIPTION EXPLORER & PDF LIBRARY
+         TAB 1: INSCRIPTION EXPLORER
          ================================================================== -->
     <section class="tab-panel active" id="tab-explorer">
       <!-- Dynasty Filter Pills -->
@@ -329,15 +326,9 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:0.5rem;">
-          <a class="btn btn-emerald btn-sm" id="modalDownloadPdfBtn" href="#" download>
-            📥 Download Easy-Reading PDF
-          </a>
           <button class="btn btn-secondary btn-sm" id="modalPrintBtn">
             🖨️ Print View
           </button>
-          <a class="btn btn-secondary btn-sm" id="modalDownloadXmlBtn" href="#" target="_blank">
-            📄 Raw XML
-          </a>
         </div>
       </div>
 
