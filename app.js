@@ -353,7 +353,7 @@
 
     const countEl = document.getElementById("resultsCountText");
     if (countEl) {
-      countEl.innerHTML = `Showing <strong>${visible.length}</strong> of <strong>${total}</strong> matching inscriptions (Total Archive: ${INSCRIPTIONS.length} XML &amp; PDF records)`;
+      countEl.innerHTML = `Showing <strong>${visible.length}</strong> of <strong>${total}</strong> matching inscriptions (Total Archive: ${INSCRIPTIONS.length} records)`;
     }
 
     const container = document.getElementById("explorerContainer");
@@ -452,14 +452,8 @@
             <button class="btn btn-primary btn-sm" data-action="read" data-id="${escapeHtml(item.id)}">
               📖 Read &amp; Understand
             </button>
-            <a class="btn btn-emerald btn-sm" href="${escapeHtml(item.pdf_file)}" download="${escapeHtml(item.id)}_${escapeHtml(item.title.replace(/[^a-zA-Z0-9]+/g, "_"))}.pdf">
-              📥 Download PDF
-            </a>
           </div>
           <div style="display:flex; gap: 0.35rem;">
-            <a class="btn btn-secondary btn-sm" href="${escapeHtml(item.xml_file)}" target="_blank" title="Open Original TEI XML">
-              XML
-            </a>
             <button class="btn btn-secondary btn-sm" data-action="bookmark" data-id="${escapeHtml(item.id)}" title="Bookmark Inscription">
               ${isBookmarked ? "★" : "☆"}
             </button>
@@ -501,8 +495,6 @@
         <td>
           <div style="display:flex; gap:0.35rem;">
             <button class="btn btn-primary btn-sm" data-action="read" data-id="${escapeHtml(item.id)}">📖 Read</button>
-            <a class="btn btn-emerald btn-sm" href="${escapeHtml(item.pdf_file)}" download>📥 PDF</a>
-            <a class="btn btn-secondary btn-sm" href="${escapeHtml(item.xml_file)}" target="_blank">XML</a>
           </div>
         </td>
       </tr>
@@ -520,7 +512,7 @@
             <th>Object &amp; Material</th>
             <th>Provenance &amp; Repository</th>
             <th>Scope</th>
-            <th>Actions / Downloads</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
@@ -633,13 +625,17 @@
       <span><strong>Editor:</strong> ${escapeHtml(item.editor)}</span>
     `;
 
-    // Download links in modal toolbar
+    // Download links in modal toolbar (if present)
     const pdfBtn = document.getElementById("modalDownloadPdfBtn");
-    pdfBtn.href = item.pdf_file;
-    pdfBtn.setAttribute("download", `${item.id}_${item.title.replace(/[^a-zA-Z0-9]+/g, "_")}.pdf`);
+    if (pdfBtn) {
+      pdfBtn.href = item.pdf_file;
+      pdfBtn.setAttribute("download", `${item.id}_${item.title.replace(/[^a-zA-Z0-9]+/g, "_")}.pdf`);
+    }
 
     const xmlBtn = document.getElementById("modalDownloadXmlBtn");
-    xmlBtn.href = item.xml_file;
+    if (xmlBtn) {
+      xmlBtn.href = item.xml_file;
+    }
 
     // Left Sidebar Metadata & Visual Proportions
     const wNum = parseFloat(item.width) || 25;
@@ -987,7 +983,6 @@
               <strong>${escapeHtml(it.id)}</strong>: ${escapeHtml(it.title)}
             </div>
             <div style="white-space:nowrap;">
-              <a href="${escapeHtml(it.pdf_file)}" download style="color:#059669; font-weight:700; text-decoration:none; margin-right:6px;">PDF</a>
               <a href="#" data-action="read" data-id="${escapeHtml(it.id)}" style="color:#ea580c; font-weight:700; text-decoration:none;">Read</a>
             </div>
           </div>`
@@ -1181,7 +1176,6 @@
           <h3 style="font-family:var(--font-serif); font-size:1.35rem; margin-top:0.4rem;">${escapeHtml(item.title)}</h3>
         </div>
         <div style="display:flex; gap:0.4rem;">
-          <a class="btn btn-emerald btn-sm" href="${escapeHtml(item.pdf_file)}" download>📥 PDF</a>
           <button class="btn btn-primary btn-sm" data-action="read" data-id="${escapeHtml(item.id)}">📖 Full Reader</button>
         </div>
       </div>
