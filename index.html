@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Siddham — The South Asia Inscriptions Archive &amp; PDF Library (IN00001–IN00215)</title>
+  <meta name="description" content="Interactive digital epigraphy portal, multi-mode Sanskrit reader, and downloadable PDF library for 215 South Asian inscriptions from the Siddham Database." />
+
+  <!-- Google Fonts for Classical Serif, Modern UI, Monospace & Devanagari -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@500;700&family=Noto+Serif+Devanagari:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet CSS for Interactive Epigraphic Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Animated Top Heritage Ribbon -->
+  <div class="heritage-ribbon"></div>
+
+  <!-- Sticky Navigation Bar -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="brand">
+        <div class="brand-emblem">सि</div>
+        <div class="brand-text">
+          <h1>SIDDHAM ARCHIVE</h1>
+          <span>South Asia Epigraphic Database • IN00001–IN00215</span>
+        </div>
+      </a>
+
+      <nav class="nav-tabs" aria-label="Main Portal Views">
+        <button class="nav-tab active" data-tab="explorer">🏛️ Inscription Explorer &amp; PDFs</button>
+        <button class="nav-tab" data-tab="map">🗺️ Geographic Map</button>
+        <button class="nav-tab" data-tab="analytics">📊 Visual Analytics</button>
+        <button class="nav-tab" data-tab="compare">⚖️ Side-by-Side Comparator</button>
+        <button class="nav-tab" data-tab="glossary">📘 Sanskrit Glossary &amp; Guide</button>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="btn btn-emerald btn-sm" href="pdfs/Siddham_Archive_Complete_Catalogue.pdf" download>
+          📚 Master Catalogue PDF
+        </a>
+        <button class="btn btn-secondary btn-sm" id="themeToggleBtn" title="Switch Dark / Light Theme">
+          ☀️ Sandstone Light
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          ✨ ERC Siddham Epigraphic Corpus • Edited by Dániel Balogh
+        </div>
+        <h2>Explore 215 Ancient South Asian Inscriptions in Interactive HTML &amp; Downloadable PDFs</h2>
+        <p>
+          Discover royal <em>praśastis</em>, copper-plate land grants (<em>tāmra-śāsana</em>), Buddhist &amp; Jain image dedications,
+          monastic seals, and cave inscriptions across the Imperial Gupta, Vākāṭaka, Aulikara, Maukhari, Hūṇa, and Later Gupta eras.
+          Every XML file has been transformed into an easy-to-understand interactive reader with live <strong>IAST ↔ Devanagari</strong>
+          transliteration and a publication-ready downloadable PDF.
+        </p>
+        <div class="hero-cta-row">
+          <a class="btn btn-primary" href="pdfs/Siddham_Archive_Complete_Catalogue.pdf" download>
+            📥 Download Complete Master Catalogue (PDF)
+          </a>
+          <button class="btn btn-emerald" id="randomSpotlightBtn">
+            🎲 Random Inscription Spotlight
+          </button>
+          <button class="btn btn-secondary" data-goto-tab="map" style="background: rgba(255,255,255,0.14); color:#fff;">
+            🗺️ View Interactive Map
+          </button>
+          <button class="btn btn-secondary" data-goto-tab="compare" style="background: rgba(255,255,255,0.14); color:#fff;">
+            ⚖️ Compare Inscriptions
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-value">215</div>
+          <div class="stat-label">TEI EpiDoc XML Editions (IN00001–IN00215)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">216</div>
+          <div class="stat-label">Downloadable PDFs (215 Individual + 1 Master)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">10</div>
+          <div class="stat-label">Dynasties &amp; Historical Polities (c. 238–730 CE)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">42+</div>
+          <div class="stat-label">Classical Sanskrit Metres &amp; Dual-Script Views</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Workspace Container -->
+  <main class="main-container">
+    <!-- ==================================================================
+         TAB 1: INSCRIPTION EXPLORER & PDF LIBRARY
+         ================================================================== -->
+    <section class="tab-panel active" id="tab-explorer">
+      <!-- Dynasty Filter Pills -->
+      <div class="dynasty-pills" id="dynastyPills"></div>
+
+      <!-- Search & Facet Filter Controls -->
+      <div class="controls-panel">
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search ID (IN00001), ruler (Samudragupta, Pravarasena), site (Sanchi, Ajanta), or Sanskrit text..."
+              autocomplete="off"
+            />
+          </div>
+
+          <select class="filter-select" id="filterObjectCat" aria-label="Filter by Object Category">
+            <option value="ALL">All Object Categories</option>
+          </select>
+
+          <select class="filter-select" id="filterMaterialCat" aria-label="Filter by Material">
+            <option value="ALL">All Materials</option>
+          </select>
+
+          <select class="filter-select" id="filterMetre" aria-label="Filter by Poetic Metre">
+            <option value="ALL">All Poetic Metres</option>
+          </select>
+
+          <select class="filter-select" id="sortSelect" aria-label="Sort Inscriptions">
+            <option value="id_asc">Sort: ID (IN00001 → IN00215)</option>
+            <option value="id_desc">Sort: ID (IN00215 → IN00001)</option>
+            <option value="title_asc">Sort: Title (A → Z)</option>
+            <option value="lines_desc">Sort: Longest Inscriptions (Most Lines)</option>
+            <option value="verses_desc">Sort: Most Poetic Verses</option>
+            <option value="dynasty">Sort: By Dynasty / Polity</option>
+          </select>
+
+          <button class="btn btn-secondary" id="resetFiltersBtn" title="Reset All Filters">
+            ↺ Reset
+          </button>
+        </div>
+
+        <div class="results-toolbar">
+          <div class="results-count" id="resultsCountText">Loading archive...</div>
+          <div class="view-toggles">
+            <button class="btn btn-secondary btn-sm active" id="viewGridBtn">⊞ Cards Grid</button>
+            <button class="btn btn-secondary btn-sm" id="viewTableBtn">☰ Compact Table</button>
+            <button class="btn btn-secondary btn-sm" id="bookmarkFilterBtn">★ Bookmarked</button>
+            <button class="btn btn-secondary btn-sm" id="exportCsvBtn">📥 Export CSV</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards Grid or Table Container -->
+      <div id="explorerContainer" class="cards-grid"></div>
+
+      <!-- Pagination / Load More -->
+      <div id="loadMoreWrapper" style="text-align: center; margin-top: 2rem; display: none;">
+        <button class="btn btn-primary" id="loadMoreBtn">Show More Inscriptions</button>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         TAB 2: GEOGRAPHIC EPIGRAPHIC MAP
+         ================================================================== -->
+    <section class="tab-panel" id="tab-map">
+      <div class="controls-panel" style="margin-bottom: 1rem;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem;">🗺️ Interactive Epigraphic Map of South Asia</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);">
+          Click any site in the left directory or any coloured marker on the map to inspect the inscriptions discovered at that findspot,
+          open the interactive reader, or download the PDF directly.
+        </p>
+      </div>
+
+      <div class="map-layout">
+        <aside class="map-sidebar">
+          <h4 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-gold-light);">
+            📍 Findspots &amp; Sites Directory
+          </h4>
+          <div class="map-site-list" id="mapSiteList"></div>
+        </aside>
+        <div class="map-container-box">
+          <div id="epigraphicMap"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         TAB 3: VISUAL ANALYTICS & CHARTS
+         ================================================================== -->
+    <section class="tab-panel" id="tab-analytics">
+      <div class="controls-panel" style="margin-bottom: 1.25rem;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem;">📊 Corpus Distribution &amp; Epigraphic Analytics</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);">
+          Interactive breakdown of all 215 XML inscriptions across dynasties, object categories, materials, and Sanskrit poetic metres.
+          <strong>Tip:</strong> Click any bar below to immediately filter the Inscription Explorer to that category!
+        </p>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <h3>👑 Inscriptions by Dynasty &amp; Polity</h3>
+          <p class="sub">Distribution across imperial and regional South Asian houses (click to filter)</p>
+          <div class="bar-list" id="chartDynasties"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>🏺 Inscribed Object Categories</h3>
+          <p class="sub">From royal copper-plate land charters to monumental stone pillars and cave walls</p>
+          <div class="bar-list" id="chartObjects"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>🪨 Physical Support Materials</h3>
+          <p class="sub">Metals, sandstone varieties, rock faces, and terracotta seals</p>
+          <div class="bar-list" id="chartMaterials"></div>
+        </div>
+
+        <div class="chart-card">
+          <h3>♫ Top Classical Sanskrit Poetic Metres</h3>
+          <p class="sub">Most frequent kāvya and śloka metres recorded in the corpus (click to filter)</p>
+          <div class="bar-list" id="chartMetres"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         TAB 4: SIDE-BY-SIDE INSCRIPTION COMPARATOR
+         ================================================================== -->
+    <section class="tab-panel" id="tab-compare">
+      <div class="controls-panel" style="margin-bottom: 1.25rem;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem;">⚖️ Side-by-Side Inscription Comparator</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);">
+          Select any two inscriptions to compare their physical dimensions, palaeography, poetic metres, and Sanskrit text editions side by side.
+        </p>
+      </div>
+
+      <div class="compare-controls">
+        <div>
+          <label for="compareSelectLeft" style="font-size:0.8rem; font-weight:700; color:var(--accent-gold-light); display:block; margin-bottom:0.35rem;">
+            Left Inscription
+          </label>
+          <select class="filter-select" id="compareSelectLeft"></select>
+        </div>
+        <div>
+          <label for="compareSelectRight" style="font-size:0.8rem; font-weight:700; color:var(--accent-gold-light); display:block; margin-bottom:0.35rem;">
+            Right Inscription
+          </label>
+          <select class="filter-select" id="compareSelectRight"></select>
+        </div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-pane" id="comparePaneLeft"></div>
+        <div class="compare-pane" id="comparePaneRight"></div>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         TAB 5: SANSKRIT EPIGRAPHIC GLOSSARY & READING GUIDE
+         ================================================================== -->
+    <section class="tab-panel" id="tab-glossary">
+      <div class="controls-panel" style="margin-bottom: 1.25rem;">
+        <h3 style="font-family: var(--font-serif); font-size: 1.5rem;">📘 Sanskrit Epigraphic Glossary, Titles &amp; Poetic Metres Guide</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);">
+          Designed for easy reading and understanding of the Sanskrit inscriptions. Click any royal title or administrative term card below
+          to filter the Explorer to all inscriptions where that term appears.
+        </p>
+      </div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 0.85rem; color: var(--accent-gold-light);">
+        1. Royal Titles, Administrative Offices &amp; Grant Terminology
+      </h3>
+      <div class="glossary-grid" id="glossaryCardsContainer" style="margin-bottom: 2.2rem;"></div>
+
+      <h3 style="font-family: var(--font-serif); font-size: 1.4rem; margin-bottom: 0.85rem; color: #c4b5fd;">
+        2. Classical Sanskrit Poetic Metres (Chandas) Guide
+      </h3>
+      <div class="glossary-grid" id="metreGuideContainer"></div>
+    </section>
+  </main>
+
+  <!-- ====================================================================
+       INTERACTIVE MULTI-MODE EPIGRAPHIC READER MODAL
+       ==================================================================== -->
+  <div class="modal-backdrop" id="readerModal" role="dialog" aria-modal="true" aria-labelledby="modalHeaderTitle">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalHeaderTitle" style="font-family: var(--font-serif); font-size: 1.65rem; line-height: 1.2;">Inscription Title</h2>
+          <div id="modalHeaderSub" style="font-size: 0.84rem; color: #e2e8f0; margin-top: 0.4rem;"></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.45rem;">
+          <button class="btn btn-secondary btn-sm" id="modalPrevBtn" title="Previous Inscription (←)">← Prev</button>
+          <button class="btn btn-secondary btn-sm" id="modalNextBtn" title="Next Inscription (→)">Next →</button>
+          <button class="btn btn-secondary btn-sm" id="modalCloseBtn" style="background:#ef4444; color:#fff; border:none;">✕ Close</button>
+        </div>
+      </div>
+
+      <div class="modal-toolbar">
+        <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <div>
+            <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-right:0.35rem;">EDITION VIEW:</span>
+            <div class="segmented-control">
+              <button class="seg-btn active" data-edition-mode="smooth">✨ Easy-Reading Smooth</button>
+              <button class="seg-btn" data-edition-mode="diplomatic">🏛️ Critical Diplomatic (Line-by-Line)</button>
+              <button class="seg-btn" data-edition-mode="verses">♫ Poetic Verses Only</button>
+            </div>
+          </div>
+
+          <div>
+            <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-right:0.35rem;">SCRIPT:</span>
+            <div class="segmented-control">
+              <button class="seg-btn active" data-script-mode="dual">IAST + देवनागरी Dual</button>
+              <button class="seg-btn" data-script-mode="iast">IAST Roman</button>
+              <button class="seg-btn" data-script-mode="deva">देवनागरी Only</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <a class="btn btn-emerald btn-sm" id="modalDownloadPdfBtn" href="#" download>
+            📥 Download Easy-Reading PDF
+          </a>
+          <button class="btn btn-secondary btn-sm" id="modalPrintBtn">
+            🖨️ Print View
+          </button>
+          <a class="btn btn-secondary btn-sm" id="modalDownloadXmlBtn" href="#" target="_blank">
+            📄 Raw XML
+          </a>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <aside class="reader-meta-col" id="modalMetaColumn"></aside>
+        <div class="reader-edition-col" id="modalEditionColumn"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS for Interactive Map -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <!-- Pre-compiled Archive Data Bundle (Works Offline / file:// and Hosted!) -->
+  <script src="data/inscriptions.js"></script>
+
+  <!-- Main Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

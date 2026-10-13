@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Generate All PDFs & Data (build_archive.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/build_archive.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: Launch Siddham Web Server (server.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/server.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}

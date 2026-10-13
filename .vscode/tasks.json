@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. Build All 215 PDFs & JSON/JS Data (Python)",
+      "type": "shell",
+      "command": "python",
+      "args": ["build_archive.py"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "2. Start Web Portal Server (Python Port 8080)",
+      "type": "shell",
+      "command": "python",
+      "args": ["server.py"],
+      "isBackground": true
+    },
+    {
+      "label": "3. Start Web Portal Server (Java Port 8085)",
+      "type": "shell",
+      "command": "java",
+      "args": ["SiddhamArchiveServer.java"],
+      "isBackground": true
+    }
+  ]
+}
